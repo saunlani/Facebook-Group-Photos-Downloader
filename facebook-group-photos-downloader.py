@@ -12,14 +12,17 @@ config.read('config.ini')
 page_counter = 0
 this_dict = {}
 
+histogram_check = config.get('main', 'histogram_check')
 
 files = []
 
-apiRequest = requests.get("https://graph.facebook.com/" + config.get('main', 'group_number') + " /" +
-                          config.get('main', 'group_number')
+apiRequest = requests.get("https://graph.facebook.com/"
+                          + config.get('main', 'api_version')
+                          + "/" + config.get('main', 'group_number')
                           + "/feed?fields=created_time,from,full_picture,message,link,updated_time,type&limit="
-                          + config.get('main', 'results_limit') + "&access_token=" + config.get('main', 'access_token'))
-
+                          + config.get('main', 'results_limit')
+                          + "&access_token="
+                          + config.get('main', 'access_token'))
 
 next_page_link = ""
 
@@ -51,7 +54,10 @@ def compare_one_image_to_another_image(x, y):
 
 def download_image(imgurl, imgid):
     urllib.request.urlretrieve(imgurl, config.get('main', 'download_folder')+imgid)
-    compare_one_image_to_folder((config.get('main', 'download_folder')+imgid), config.get('main', 'download_folder'))
+    if histogram_check == 'true':
+        compare_one_image_to_folder((config.get('main', 'download_folder')+imgid),
+                                    config.get('main', 'download_folder'))
+
 
 
 def get_file_array_from_folder():
